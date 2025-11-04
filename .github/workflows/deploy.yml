@@ -1,0 +1,27 @@
+name: Deploy infra
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: # Allow manual triggering of the workflow
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::992887713340:role/TrustActionByGitHub
+          aws-region: us-east-1
+
+      - name: Build
+        run: |
+          nvm use; sam build

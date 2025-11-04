@@ -1,5 +1,6 @@
 # DevOps API
 
+## Purpose
 Use AWS Serverless Application Model (SAM) to create an API Gateway and a Lambda to perform DevOps operations.
 
 This project demonstrates the use of SAM Command Line Interface to:
