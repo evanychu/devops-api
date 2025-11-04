@@ -25,7 +25,7 @@ curl -X POST \
 ```
 
 The API's **my-network** route is connected to the Lambda function that:
-1. Contains source code in **security-group/app.mjs**.
+1. Contains Lambda's source code in **security-group/app.mjs**.
 1. Extract the source IP address of the the caller.
 1. Calculate the network address of the caller.
 1. Delete the existing security group rules associated with the EC2 instance.
