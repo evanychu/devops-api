@@ -14,6 +14,15 @@ Globals:
     Timeout: 10
 
 Resources:
+  SecurityGroupApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      StageName: $default
+      DefaultRouteSettings:
+        # Configure throttling (requests per second) to prevent API abuse.
+        ThrottlingBurstLimit: 1
+        ThrottlingRateLimit: 1
+
   SecurityGroupFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -31,8 +40,9 @@ Resources:
           TARGET_SECURITY_GROUP_ID: !Ref TargetSecurityGroupId
       Events:
         SecurityGroup:
-          Type: HttpApi # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: HttpApi # More info about API Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#httpapi
           Properties:
+            ApiId: !Ref SecurityGroupApi
             Path: /my-network
             Method: post
 
@@ -42,7 +52,7 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   HelloWorldApi:
     Description: "API Gateway endpoint URL for my network"
-    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/my-network"
+    Value: !Sub "https://${SecurityGroupApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/my-network"
   SecurityGroupFunction:
     Description: "Lambda ARN for DevOps"
     Value: !GetAtt SecurityGroupFunction.Arn
